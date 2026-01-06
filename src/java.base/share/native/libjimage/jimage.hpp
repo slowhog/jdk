@@ -32,7 +32,14 @@
 #include "jni.h"
 
 // Opaque reference to a JImage file.
-class JImageFile;
+#ifdef __cplusplus
+    class JImageFile;
+
+    extern "C" {
+#else
+    typedef struct JImageFile_s JImageFile;
+#endif
+
 // Opaque reference to an image file resource location.
 typedef jlong JImageLocationRef;
 
@@ -72,7 +79,7 @@ typedef jlong JImageLocationRef;
  *   ...
  */
 
-extern "C" JNIEXPORT JImageFile*
+JNIEXPORT JImageFile*
 JIMAGE_Open(const char *name, jint* error);
 
 typedef JImageFile* (*JImageOpen_t)(const char *name, jint* error);
@@ -87,7 +94,7 @@ typedef JImageFile* (*JImageOpen_t)(const char *name, jint* error);
  *  (*JImageClose)(image);
  */
 
-extern "C" JNIEXPORT void
+JNIEXPORT void
 JIMAGE_Close(JImageFile* jimage);
 
 typedef void (*JImageClose_t)(JImageFile* jimage);
@@ -107,7 +114,7 @@ typedef void (*JImageClose_t)(JImageFile* jimage);
  *   JImageLocationRef location = (*JImageFindResource)(image,
  *                                "java.base", "9.0", "java/lang/String.class", &size);
  */
-extern "C" JNIEXPORT JImageLocationRef JIMAGE_FindResource(JImageFile* jimage,
+JNIEXPORT JImageLocationRef JIMAGE_FindResource(JImageFile* jimage,
         const char* module_name, const char* version, const char* name,
         jlong* size);
 
@@ -131,7 +138,7 @@ typedef JImageLocationRef(*JImageFindResource_t)(JImageFile* jimage,
  *  char* buffer = new char[size];
  *  (*JImageGetResource)(image, location, buffer, size);
  */
-extern "C" JNIEXPORT jlong
+JNIEXPORT jlong
 JIMAGE_GetResource(JImageFile* jimage, JImageLocationRef location,
         char* buffer, jlong size);
 
@@ -148,7 +155,7 @@ typedef jlong(*JImageGetResource_t)(JImageFile* jimage, JImageLocationRef locati
  * required. All strings are utf-8, zero byte terminated.file.
  *
  * Ex.
- *   bool ctw_visitor(JImageFile* jimage, const char* module_name, const char* version,
+ *   jboolean ctw_visitor(JImageFile* jimage, const char* module_name, const char* version,
  *                  const char* package, const char* name, const char* extension, void* arg) {
  *     if (strcmp(extension, "class") == 0) {
  *       char path[JIMAGE_MAX_PATH];
@@ -162,13 +169,17 @@ typedef jlong(*JImageGetResource_t)(JImageFile* jimage, JImageLocationRef locati
  *   (*JImageResourceIterator)(image, ctw_visitor, loader);
  */
 
-typedef bool (*JImageResourceVisitor_t)(JImageFile* jimage,
+typedef jboolean (*JImageResourceVisitor_t)(JImageFile* jimage,
         const char* module_name, const char* version, const char* package,
         const char* name, const char* extension, void* arg);
 
-extern "C" JNIEXPORT void
+JNIEXPORT void
 JIMAGE_ResourceIterator(JImageFile* jimage,
         JImageResourceVisitor_t visitor, void *arg);
 
 typedef void (*JImageResourceIterator_t)(JImageFile* jimage,
         JImageResourceVisitor_t visitor, void* arg);
+
+#ifdef __cplusplus
+    } // extern "C"
+#endif
