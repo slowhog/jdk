@@ -55,9 +55,7 @@ int UnsetEnv(char *name);
 char *FindExecName(char *program);
 const char *SetExecname(char **argv);
 const char *GetExecName();
-static jboolean GetJVMPath(const char *jdkroot, const char *jvmtype,
-                           char *jvmpath, jint jvmpathsize);
-static jboolean GetJDKInstallRoot(char *path, jint pathsize, jboolean speculative);
+jboolean GetJDKInstallRoot(char *path, jint pathsize, jboolean speculative);
 
 /* Reports a system error message to stderr, including errno */
 JNIEXPORT void JNICALL

@@ -107,6 +107,9 @@ GetApplicationHome(char *buf, jint bufsize);
 jboolean
 GetApplicationHomeFromDll(char *buf, jint bufsize);
 
+jboolean
+GetJImageFilePath(char *buf, jint bufsize);
+
 /*
  * Different platforms will implement this, here
  * pargc is a pointer to the original argc,

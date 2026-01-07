@@ -75,6 +75,25 @@ TruncatePath(char *buf, jboolean pathisdll)
     return JNI_FALSE;
 }
 
+jboolean
+GetJImageFilePath(char *buf, jint bufsize)
+{
+    char jdkHome[MAXPATHLEN];
+    struct stat s;
+
+    if (!GetJDKInstallRoot(jdkHome, sizeof(jdkHome), JNI_FALSE)) {
+        return JNI_FALSE;
+    }
+
+    JLI_Snprintf(buf, bufsize, "%s/lib/modules", jdkHome);
+    if (stat(buf, &s) == 0) {
+        JLI_TraceLauncher("JDK jimage file is %s\n", buf);
+        return JNI_TRUE;
+    }
+
+    return JNI_FALSE;
+}
+
 /*
  * Retrieves the path to the JDK home by locating the executable file
  * of the current process and then truncating the path to the executable

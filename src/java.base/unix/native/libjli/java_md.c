@@ -136,7 +136,8 @@
 
 /* Store the name of the executable once computed */
 static char *execname = NULL;
-
+static jboolean GetJVMPath(const char *jdkroot, const char *jvmtype,
+                           char *jvmpath, jint jvmpathsize);
 /*
  * execname accessor from other parts of platform dependent logic
  */
@@ -474,7 +475,7 @@ GetJVMPath(const char *jdkroot, const char *jvmtype,
 /*
  * Find path to the JDK installation root
  */
-static jboolean
+jboolean
 GetJDKInstallRoot(char *path, jint pathsize, jboolean speculative)
 {
     char libjava[MAXPATHLEN];

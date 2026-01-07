@@ -205,3 +205,21 @@ ifeq ($(call isTargetOs, linux)+$(call isTargetCpu, x86_64)+$(INCLUDE_COMPILER2)
 endif
 
 ################################################################################
+## Build liblauncher
+################################################################################
+
+ifeq ($(STATIC_LIBS), true)
+  $(eval $(call SetupJdkLibrary, BUILD_LIBLAUNCHER, \
+      NAME := launcher, \
+      TYPE := STATIC_LIBRARY, \
+      OPTIMIZATION := LOW, \
+      EXTRA_HEADER_DIRS := libjvm libjimage libjli, \
+      CFLAGS := $(VERSION_CFLAGS), \
+      CFLAGS_unix := -UDEBUG, \
+      JDK_LIBS := libjimage libjli, \
+  ))
+
+  TARGETS += $(BUILD_LIBLAUNCHER)
+endif
+
+################################################################################
